@@ -1,6 +1,7 @@
 import "./Chessboard.css";
 import Ranks from "./bits/Ranks";
 import Files from "./bits/Files";
+import Pieces from "../Pieces/Pieces";
 
 const Chessboard = () => {
   const ranks = Array(8)
@@ -33,6 +34,8 @@ const Chessboard = () => {
           ))
         )}
       </div>
+
+      <Pieces />
 
       <Files files={files} />
     </div>
