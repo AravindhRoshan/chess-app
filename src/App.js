@@ -1,33 +1,57 @@
-import './App.css';
-import Board from './components/Board/Board';
-import { reducer } from './reducer/reducer'
-import { useReducer } from 'react'
-import { initGameState } from './constants';
-import AppContext from './contexts/Context'
-import Control from './components/Control/Control';
-import TakeBack from './components/Control/bits/TakeBack';
-import MovesList from './components/Control/bits/MovesList';
+import React, { useReducer } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 
-function App() {
+import { reducer } from "./reducer/reducer";
+import { initGameState } from "./constants";
+import AppContext from "./contexts/Context";
+import LoginPage from "./components/LoginPage/LoginPage";
+import LandingPage from "./components/LandingPage/LangingPage";
 
-    const [appState, dispatch ] = useReducer(reducer,initGameState);
 
-    const providerState = {
-        appState,
-        dispatch
-    }
+const App = () => {
+  const [appState, dispatch] = useReducer(reducer, initGameState);
+  const providerState = {
+    appState,
+    dispatch,
+  };
 
-    return (
-        <AppContext.Provider value={providerState} >
-            <div className="App">
-                <Board/>
-                <Control>
-                    <MovesList/>
-                    <TakeBack/>
-                </Control>
-            </div>
-        </AppContext.Provider>
-    ); 
-}
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  return (
+    <AppContext.Provider value={providerState}>
+      <Router>
+        <div>
+          <Routes>
+            {/* Public Route - Login Page */}
+            <Route
+              path="/login"
+              element={<LoginPage onLogin={handleLogin} />}
+            />
+
+            {/* Protected Route - Chess Game Board as Landing Page */}
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? <LandingPage /> : <Navigate to="/login" />
+              }
+            />
+
+            {/* Redirect any unknown routes to login */}
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </div>
+      </Router>
+    </AppContext.Provider>
+  );
+};
 
 export default App;
