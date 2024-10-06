@@ -3,7 +3,7 @@ import "./LoginPage.css";
 import bgImage from "../../assets/chessBg.jpg"; // Import your local background image
 import { useNavigate } from "react-router-dom";
 
-const LoginPage = ({onLogin}) => {
+const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
 
@@ -98,19 +98,55 @@ const LoginPage = ({onLogin}) => {
     }
 
     if (valid) {
-      if (isLogin) {
-        if (
-          loginData.email === "a@b.com" &&
-          loginData.password === "123"
-        ) {
-          onLogin(); // Call the onLogin prop to update authentication status
-          navigate("/"); // Navigate to the landing page after successful login
-        } else {
-          alert("Invalid email or password");
-        }
-        console.log("Login Data:", loginData);
-      } else {
+      if (!isLogin) {
+        const APICall = async () => {
+          try {
+            const response = await fetch("http://localhost:8000/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json", // Specify that we're sending JSON data
+              },
+              body: JSON.stringify(signupData), // Convert signupData object to a JSON string
+            });
+
+            const resultFromApi = await response.json(); // Parse the JSON response
+            console.log("resultFromApi", resultFromApi); // Log the result
+            onLogin(); // Call the onLogin prop to update authentication status
+            navigate("/"); // Navigate to the landing page after successful login
+          } catch (error) {
+            console.error("Error making API call:", error);
+          }
+        };
+
+        APICall();
+
         console.log("Signup Data:", signupData);
+      } else {
+        const APICall = async () => {
+          try {
+            const response = await fetch("http://localhost:8000/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json", // Specify that we're sending JSON data
+              },
+              body: JSON.stringify(loginData), // Convert signupData object to a JSON string
+            });
+
+            const resultFromApi = await response.json(); // Parse the JSON response
+            console.log("resultFromApi", resultFromApi); // Log the result
+            if (resultFromApi == "Sucess") {
+              onLogin(); // Call the onLogin prop to update authentication status
+              navigate("/"); // Navigate to the landing page after successful login
+            } else {
+              alert(resultFromApi);
+            }
+          } catch (error) {
+            console.error("Error making API call:", error);
+          }
+        };
+
+        APICall();
+        console.log("Login Data:", loginData);
       }
     }
   };

@@ -68,10 +68,6 @@ h2 {
   outline: none;
 }
 
-.input-group input:focus {
-  border-color: #e50914;
-}
-
 .submit-btn {
   width: 100%;
   padding: 12px;
@@ -113,6 +109,6 @@ h2 {
   content: "⚠ ";
 }
 
-.input-group input:invalid {
+.input-group input:invalid:focus {
   border: 2px solid #ff4d4d;
 }
