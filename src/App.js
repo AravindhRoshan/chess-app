@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,7 +12,6 @@ import AppContext from "./contexts/Context";
 import LoginPage from "./components/LoginPage/LoginPage";
 import LandingPage from "./components/LandingPage/LangingPage";
 
-
 const App = () => {
   const [appState, dispatch] = useReducer(reducer, initGameState);
   const providerState = {
@@ -20,10 +19,17 @@ const App = () => {
     dispatch,
   };
 
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated")
+  );
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    localStorage.setItem("isAuthenticated", "true"); // Store the flag in localStorage
+  };
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.setItem("isAuthenticated", "false"); // Store the flag in localStorage
   };
 
   return (
@@ -41,7 +47,11 @@ const App = () => {
             <Route
               path="/"
               element={
-                isAuthenticated ? <LandingPage /> : <Navigate to="/login" />
+                isAuthenticated ? (
+                  <LandingPage onLogout={handleLogout} />
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
 

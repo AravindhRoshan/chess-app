@@ -4,13 +4,14 @@ import Control from "../Control/Control";
 import TakeBack from "../Control/bits/TakeBack";
 import MovesList from "../Control/bits/MovesList";
 
-const LandingPage = () => {
+const LandingPage = ({ onLogout }) => {
   return (
     <div className="App">
       <Board />
+
       <Control>
         <MovesList />
-        <TakeBack />
+        <TakeBack onLogout={onLogout} />
       </Control>
     </div>
   );
